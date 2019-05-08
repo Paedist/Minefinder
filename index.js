@@ -4,6 +4,10 @@ var bombData = {
     hard : {width: 30, height: 16, bomb: 99},
 }
 
+$("body").on("contextmenu",event => {
+    event.preventDefault();
+})
+
 
 /**
  * 테이블의 생성에 필요한 데이터를 반환해줌
@@ -205,7 +209,8 @@ function setBackgroundRed($this){
 
 function gameOver($this){
     // 클릭 이벤트를 해제시킨다
-    $(".gametable td").off("click")
+    $(".gametable td").off("click").off("contextmenu")
+
     // 폭탄일 경우 오픈을 한다
     $(".gametable td").each(function(){
         var $칸 = $(this)
@@ -253,6 +258,7 @@ function openCell($this){
 
     if( $this.hasClass("active") ) return;
     $this.off("click")
+    $this.off("contextmenu")
     $this.addClass("active")
 
     
@@ -266,11 +272,15 @@ function openCell($this){
 }
 
 function initclickEvent(){
-    var isTableVirgin = () => $("td.active").length === 0//???
+
+    var isCellFlag = $this => $this.data("state") === 1;
+    var isTableVirgin = () => $("td.active").length === 0 //화살표 함수 
 
     $(".gametable td").on("click",function(event){
         $this = $(this)
         var [x, y] = [$this.data("x"), $this.data("y")]
+        if( isCellFlag($this) ) return;
+
         if( isTableVirgin() ){
             installMine($this)
             //debugmode()
@@ -283,6 +293,13 @@ function initclickEvent(){
          
     })
 
+    // 오른쪽 클릭했을때 현재 상태를 업데이트
+    function updateState(){
+        var state = $this.data("state") || 0
+        state = ( state + 1 ) % 3
+        $this.data("state",state)
+    }
+
     /**52
      * 암거도없을때/  오른족클릭하면: 깃발
      * 깃발/ 왼쪽:클릭X, 오른쪽클릭시: 물음표
@@ -290,15 +307,24 @@ function initclickEvent(){
      */
     $(".gametable td").on("contextmenu",function(event){
         $this = $(this)
-        var 깃발HTML = "<i class='fab fa-font-awesome-flag'></i>"
-        var 물음표HTML = "<i class='fas fa-question'></i>"
-        var flag = 0;
-        event.preventDefault();
-        if( $this.data( "isFlaged") !== true) {
-            $this.data( "isFlaged", true )
+        var htmlstate = {
+            "empty" : "",
+            "flag" : "<i class='fab fa-font-awesome-flag'></i>",
+            "question" : "<i class='fas fa-question'></i>"
+        } // 오브젝트 선언
+
+        updateState();
+        switch( $this.data("state") ){
+            case 0: // 빈칸
+                $this.html( htmlstate.empty )
+            break;
+            case 1: // 깃발
+                $this.html( htmlstate.flag )
+            break;
+            case 2: // 물음표
+                $this.html( htmlstate.question )
+            break;
         }
-        else
-            $this.html(물음표HTML);
     })
 }
 
@@ -319,4 +345,3 @@ $(".start").on("click",function(){
     initclickEvent( $table )
    
 })
-
