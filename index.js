@@ -56,10 +56,6 @@ function createTable(width, height, bomb){
  */
 var installMine = (function(){
     /**
-     * new Array(10).fill([]).mapmap(v => new Array(10).fill([]))
-     * 바로 10x10 배열 만들기
-     */
-    /**
      * 게임판의 크기만큼 빈 배열을 생성하고 반환
      */
     function getGamePanByArray(){
@@ -211,6 +207,8 @@ function gameOver($this){
     // 클릭 이벤트를 해제시킨다
     $(".gametable td").off("click").off("contextmenu")
 
+    // 얼굴의 형태를 변형
+    changeface("dead")
     // 폭탄일 경우 오픈을 한다
     $(".gametable td").each(function(){
         var $칸 = $(this)
@@ -255,10 +253,12 @@ function openCell($this){
     var 폭탄HTML = "<i class='fa fa-bomb'></i>"
     // data에 true, 0,1,2,3,4,~~ 들어있음
     var data = $this.data("bombdata");
+    
+    // 플레그 데이터를 0으로 갱신
+    $this.data( "state", 0 )
 
     if( $this.hasClass("active") ) return;
     $this.off("click")
-    $this.off("contextmenu")
     $this.addClass("active")
 
     
@@ -268,7 +268,7 @@ function openCell($this){
     }
     if( data === 0 ) 상하좌우오픈($this)
 
-
+    renewalScreenMineCount();
 }
 
 function initclickEvent(){
@@ -325,7 +325,19 @@ function initclickEvent(){
                 $this.html( htmlstate.question )
             break;
         }
+        renewalScreenMineCount();
     })
+}
+
+function renewalScreenMineCount(){
+    var allMineCount = $(".gametable").data("bombcount")
+    var allflagCount = $(".gametable td").toArray().reduce(function(thisFlagCount,nextTd){
+        var nowState = $(nextTd).data("state") 
+        if( nowState === 1 || nowState === 2)
+            thisFlagCount++
+        return thisFlagCount
+    },0)
+    $(".minecount").html(allMineCount - allflagCount)
 }
 
 function debugmode(){
@@ -339,9 +351,39 @@ function debugmode(){
  */
 $(".start").on("click",function(){
     var $this = $(this);
-    var { width, height, bomb } = getTableType($this)
 
+    // 버튼에 우리가 제일 마지막에 누른 버튼 표시
+    $(".start").removeClass("lastClicked")
+    $this.addClass("lastClicked")
+
+    var { width, height, bomb } = getTableType($this)
+    $(".minecount").html(bomb);
     var $table = createTable(width,height,bomb)
     initclickEvent( $table )
    
 })
+
+
+$(".face").on("mousedown",function(){
+    $(".start.lastClicked").trigger("click")
+    changeface("clicked")
+})
+
+$(".face").on("mouseup",function(){
+    changeface("nonclicked")
+})
+
+function changeface(state){
+    var $face = $(".face")
+    switch(state){
+        case "clicked":
+            $face.html(`<i class="far fa-surprise"></i>`);
+        break;
+        case "dead":
+            $face.html(`<i class="fas fa-dizzy"></i>`);
+        break;
+        default:
+            $face.html(`<i class="far fa-smile"></i>`);
+        break;
+    }
+}
