@@ -1,0 +1,60 @@
+body, html{
+    width:100%;
+    height:100%;
+    background:#fafafa;
+    margin:0;
+    padding:0;
+}
+
+.section{
+    background:#fff;
+    border:1px solid #ddd;
+    padding:2em;
+    width:90%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:1em;
+    text-align:center;
+    box-shadow:0px 2px 2px rgba(0,0,0,0.15)
+}
+
+.section.gamepan{
+    min-height:20em;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section.gamepan table{
+    border:1px solid #ddd;
+    border-collapse: collapse;
+}
+
+.section.gamepan table td{
+    width:2em;
+    height:2em;
+}
+
+
+.section.gamepan table td.active{
+    background:#eee;
+}
+
+.setting button{
+    padding:1em 2em;
+    background:rgba(0,0,0,0);
+    margin-left:1em;
+    border:solid 1px #ccc;
+    border-radius:0.5em;
+    position: relative;
+    bottom:0px;
+    /* 애니메이션을 위해 선언 */
+    transition: all 0.2s;
+}
+
+/* 버튼에 마우스를 갖다대면 애니메이션 적용*/
+.setting button:hover{
+    background:#eee;
+    bottom:3px;
+}
+
