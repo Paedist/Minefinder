@@ -25,6 +25,22 @@ function getTableType($this){
     return bombData[thisClassName]
 }
 
+var timerInterval;
+function startTimer(){
+    endTimer()
+    $(".minetime").html("00");
+    timerInterval = setInterval(function(){
+        $(".minetime").html(function(i,nowHtml){
+            return (parseInt(nowHtml) + 1).toString().padStart(2,0)
+        })
+    },1000)
+}
+
+function endTimer(){
+    clearInterval(timerInterval)
+}
+
+
 /**
  * 테이블생성
  * @param {number} width 가로크기
@@ -49,6 +65,7 @@ function createTable(width, height, bomb){
 
 
     $(".gametable").data("bombcount",bomb)
+    startTimer()
 }
 
 /**
@@ -203,20 +220,34 @@ function setBackgroundRed($this){
     $this.css("background-color","red")
 }
 
-function gameOver($this){
+function gameOver(){
     // 클릭 이벤트를 해제시킨다
     $(".gametable td").off("click").off("contextmenu")
 
     // 얼굴의 형태를 변형
     changeface("dead")
+
+    // 타이머 정지
+    endTimer()
     // 폭탄일 경우 오픈을 한다
     $(".gametable td").each(function(){
-        var $칸 = $(this)
-        if( isClickedMine($칸) ){
-            openCell($칸)
-            setBackgroundRed($칸)
+        var $td = $(this)
+        if( isClickedMine($td) ){
+            openCell($td)
+            setBackgroundRed($td)
         }
     })
+}
+
+function gameWin(){
+    // 클릭 이벤트를 해제시킨다
+    $(".gametable td").off("click").off("contextmenu")
+
+    // 얼굴의 형태를 변형
+    changeface("win")
+
+    // 타이머 정지
+    endTimer()
 }
 
 /**
@@ -258,7 +289,7 @@ function openCell($this){
     $this.data( "state", 0 )
 
     if( $this.hasClass("active") ) return;
-    $this.off("click")
+    $this.off("click").off("contextmenu")
     $this.addClass("active")
 
     
@@ -268,7 +299,10 @@ function openCell($this){
     }
     if( data === 0 ) 상하좌우오픈($this)
 
+    // 화면의 지뢰 개수를 갱신
     renewalScreenMineCount();
+
+
 }
 
 function initclickEvent(){
@@ -290,7 +324,11 @@ function initclickEvent(){
             gameOver($this)
         else
             openCell($this)
-         
+
+        // 액티브되지않은 셀 갯수랑 총 폭탄 갯수가 같으면 게임 승리
+        if( $("td").not(".active").length === $(".gametable").data("bombcount") ){
+            gameWin();
+        }
     })
 
     // 오른쪽 클릭했을때 현재 상태를 업데이트
@@ -337,7 +375,7 @@ function renewalScreenMineCount(){
             thisFlagCount++
         return thisFlagCount
     },0)
-    $(".minecount").html(allMineCount - allflagCount)
+    $(".minecount").html(parseInt(allMineCount - allflagCount).toString().padStart(2,0))
 }
 
 function debugmode(){
@@ -355,6 +393,9 @@ $(".start").on("click",function(){
     // 버튼에 우리가 제일 마지막에 누른 버튼 표시
     $(".start").removeClass("lastClicked")
     $this.addClass("lastClicked")
+
+    // 얼굴초기화
+    changeface("nonclicked")
 
     var { width, height, bomb } = getTableType($this)
     $(".minecount").html(bomb);
@@ -382,6 +423,9 @@ function changeface(state){
         case "dead":
             $face.html(`<i class="fas fa-dizzy"></i>`);
         break;
+        case "win":
+            $face.html('<i class="fas fa-trophy"></i>');
+            break;
         default:
             $face.html(`<i class="far fa-smile"></i>`);
         break;
