@@ -6,9 +6,9 @@ var bombData = {
 
 
 /**
- * Å×ÀÌºíÀÇ »ı¼º¿¡ ÇÊ¿äÇÑ µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇØÁÜ
- * @param {JQuery} $this Å¬¸¯ÇÑ ¹öÆ°ÀÇ JQuery °´Ã¼
- * @return ¸¸µé Å×ÀÌºíÀÇ Object Çü½ÄÀ¸·Î µÈ µ¥ÀÌÅÍ
+ * í…Œì´ë¸”ì˜ ìƒì„±ì— í•„ìš”í•œ ë°ì´í„°ë¥¼ ë°˜í™˜í•´ì¤Œ
+ * @param {JQuery} $this í´ë¦­í•œ ë²„íŠ¼ì˜ JQuery ê°ì²´
+ * @return ë§Œë“¤ í…Œì´ë¸”ì˜ Object í˜•ì‹ìœ¼ë¡œ ëœ ë°ì´í„°
  */
 function getTableType($this){
     var classlist = ["basic","medium","hard"]
@@ -22,15 +22,15 @@ function getTableType($this){
 }
 
 /**
- * Å×ÀÌºí»ı¼º
- * @param {number} width °¡·ÎÅ©±â
- * @param {number} height ¼¼·ÎÅ©±â
- * @param {number} bomb Áö·Ú°¹¼ö
+ * í…Œì´ë¸”ìƒì„±
+ * @param {number} width ê°€ë¡œí¬ê¸°
+ * @param {number} height ì„¸ë¡œí¬ê¸°
+ * @param {number} bomb ì§€ë¢°ê°¯ìˆ˜
  */
 function createTable(width, height, bomb){
-    // Å×ÀÌºí¿¡ heigh¸¸Å­ trÀ» ¸¸µë
+    // í…Œì´ë¸”ì— heighë§Œí¼ trì„ ë§Œë“¬
     $(".gametable").html("<tr></tr>".repeat(height))
-    // width¸¸Å­ td¸¦ ¸¸µë
+    // widthë§Œí¼ tdë¥¼ ë§Œë“¬
     $(".gametable tr").html("<td></td>".repeat(width))
 
     $(".gametable tr").each(function(i){
@@ -48,15 +48,15 @@ function createTable(width, height, bomb){
 }
 
 /**
- * ÆøÅºÀÌ¶û ¼ıÀÚ ¼³Ä¡
+ * í­íƒ„ì´ë‘ ìˆ«ì ì„¤ì¹˜
  */
 var installMine = (function(){
     /**
      * new Array(10).fill([]).mapmap(v => new Array(10).fill([]))
-     * ¹Ù·Î 10x10 ¹è¿­ ¸¸µé±â
+     * ë°”ë¡œ 10x10 ë°°ì—´ ë§Œë“¤ê¸°
      */
     /**
-     * °ÔÀÓÆÇÀÇ Å©±â¸¸Å­ ºó ¹è¿­À» »ı¼ºÇÏ°í ¹İÈ¯
+     * ê²Œì„íŒì˜ í¬ê¸°ë§Œí¼ ë¹ˆ ë°°ì—´ì„ ìƒì„±í•˜ê³  ë°˜í™˜
      */
     function getGamePanByArray(){
         var vertical = $(".gamepan tr").length;
@@ -72,116 +72,116 @@ var installMine = (function(){
     }
 
 
-    function ÆøÅºÀ»³õÀ»·£´ıÁÂÇ¥(¼¼·Î,°¡·Î){
-        var ·£´ı¼¼·ÎÁÂÇ¥ = Math.floor( Math.random() * ¼¼·Î )
-        var ·£´ı°¡·ÎÁÂÇ¥ = Math.floor( Math.random() * °¡·Î )
+    function í­íƒ„ì„ë†“ì„ëœë¤ì¢Œí‘œ(ì„¸ë¡œ,ê°€ë¡œ){
+        var ëœë¤ì„¸ë¡œì¢Œí‘œ = Math.floor( Math.random() * ì„¸ë¡œ )
+        var ëœë¤ê°€ë¡œì¢Œí‘œ = Math.floor( Math.random() * ê°€ë¡œ )
 
         return {
-            x:·£´ı°¡·ÎÁÂÇ¥,
-            y:·£´ı¼¼·ÎÁÂÇ¥
+            x:ëœë¤ê°€ë¡œì¢Œí‘œ,
+            y:ëœë¤ì„¸ë¡œì¢Œí‘œ
         }
     }
 
-    function ÆøÅºÀ»¿©±â¿¡³õ¾ÆµµµÇ´Ï(°ÔÀÓÆÇ,ÁÂÇ¥,Á¦¿ÜÇÒÁÂÇ¥){
-        // Á¦¿ÜÇÒ ÁÂÇ¥¶û ÁÂÇ¥°¡ ¶È°°À¸¸é ºÎÁ¤ ¹İÈ¯
-        if( ÁÂÇ¥.x === Á¦¿ÜÇÒÁÂÇ¥.x && ÁÂÇ¥.y === Á¦¿ÜÇÒÁÂÇ¥.y )
+    function í­íƒ„ì„ì—¬ê¸°ì—ë†“ì•„ë„ë˜ë‹ˆ(ê²Œì„íŒ,ì¢Œí‘œ,ì œì™¸í• ì¢Œí‘œ){
+        // ì œì™¸í•  ì¢Œí‘œë‘ ì¢Œí‘œê°€ ë˜‘ê°™ìœ¼ë©´ ë¶€ì • ë°˜í™˜
+        if( ì¢Œí‘œ.x === ì œì™¸í• ì¢Œí‘œ.x && ì¢Œí‘œ.y === ì œì™¸í• ì¢Œí‘œ.y )
             return false
             
-        /// °ÔÀÓÆÇ¿¡ ÀÌ¹Ì ÆøÅºÀÌ ÀÖÀ¸¸é ºÎÁ¤¹İÈ¯
-        if( °ÔÀÓÆÇ[ ÁÂÇ¥.y ][ ÁÂÇ¥.x ] !== null )
+        /// ê²Œì„íŒì— ì´ë¯¸ í­íƒ„ì´ ìˆìœ¼ë©´ ë¶€ì •ë°˜í™˜
+        if( ê²Œì„íŒ[ ì¢Œí‘œ.y ][ ì¢Œí‘œ.x ] !== null )
             return false
 
         return true
     }
 
-    function ÆøÅºÀ»³õÀÚ(arrayedGamePan,ÁÂÇ¥){
-        var { x, y } = ÁÂÇ¥
+    function í­íƒ„ì„ë†“ì(arrayedGamePan,ì¢Œí‘œ){
+        var { x, y } = ì¢Œí‘œ
         arrayedGamePan[y][x] = true;
     }
 
     /**
-     * ºó °ÔÀÓÆÇ¿¡ ÆøÅº ³Ö±â
-     * @param {Array} arrayedGamePan ºó ¹è¿­ 
-     * @param {Jquery} $clickedCell Á¦¿ÜÇÒ ¼¿ÀÇ Jquery °´Ã¼
+     * ë¹ˆ ê²Œì„íŒì— í­íƒ„ ë„£ê¸°
+     * @param {Array} arrayedGamePan ë¹ˆ ë°°ì—´ 
+     * @param {Jquery} $clickedCell ì œì™¸í•  ì…€ì˜ Jquery ê°ì²´
      */
     function putMine(arrayedGamePan,$clickedCell){
         var [ver, hor] = [ arrayedGamePan.length, arrayedGamePan[0].length]
-        var Á¦¿ÜÇÒÁÂÇ¥ = {
+        var ì œì™¸í• ì¢Œí‘œ = {
             x: $clickedCell.data("x"),
             y: $clickedCell.data("y") 
         }
-        var ³õ¾Æ¾ßÇÏ´ÂÆøÅº = $(".gametable").data("bombcount")
+        var ë†“ì•„ì•¼í•˜ëŠ”í­íƒ„ = $(".gametable").data("bombcount")
         
-        while(³õ¾Æ¾ßÇÏ´ÂÆøÅº !== 0){
-            var ÁÂÇ¥ = ÆøÅºÀ»³õÀ»·£´ıÁÂÇ¥(ver,hor)
-            if( ÆøÅºÀ»¿©±â¿¡³õ¾ÆµµµÇ´Ï(arrayedGamePan,ÁÂÇ¥,Á¦¿ÜÇÒÁÂÇ¥) ){
-                ÆøÅºÀ»³õÀÚ(arrayedGamePan,ÁÂÇ¥)
-                ³õ¾Æ¾ßÇÏ´ÂÆøÅº -= 1
+        while(ë†“ì•„ì•¼í•˜ëŠ”í­íƒ„ !== 0){
+            var ì¢Œí‘œ = í­íƒ„ì„ë†“ì„ëœë¤ì¢Œí‘œ(ver,hor)
+            if( í­íƒ„ì„ì—¬ê¸°ì—ë†“ì•„ë„ë˜ë‹ˆ(arrayedGamePan,ì¢Œí‘œ,ì œì™¸í• ì¢Œí‘œ) ){
+                í­íƒ„ì„ë†“ì(arrayedGamePan,ì¢Œí‘œ)
+                ë†“ì•„ì•¼í•˜ëŠ”í­íƒ„ -= 1
             }
         }
         
         return arrayedGamePan
     }
 
-    function ¿©±â¿¡ÆøÅºÀÌÀÖ´Ï(°ÔÀÓÆÇ,i,j){
-        var [¼¼·Î±æÀÌ, °¡·Î±æÀÌ] = [°ÔÀÓÆÇ.length, °ÔÀÓÆÇ[0].length]
+    function ì—¬ê¸°ì—í­íƒ„ì´ìˆë‹ˆ(ê²Œì„íŒ,i,j){
+        var [ì„¸ë¡œê¸¸ì´, ê°€ë¡œê¸¸ì´] = [ê²Œì„íŒ.length, ê²Œì„íŒ[0].length]
         if(i < 0 || j < 0) return false;
-        if(i >= ¼¼·Î±æÀÌ || j >= °¡·Î±æÀÌ) return false
+        if(i >= ì„¸ë¡œê¸¸ì´ || j >= ê°€ë¡œê¸¸ì´) return false
         
 
 
-        return °ÔÀÓÆÇ[i][j] === true;
+        return ê²Œì„íŒ[i][j] === true;
     }
 
-    function ÀÌ±ÙÃ³¿¡ÆøÅºÀÌ¸î°³³ªÀÖ´Ï(°ÔÀÓÆÇ,i,j){
-        var ÆøÅº°¹¼ö = 0;
-        var °Ë»çÇÒ»ó´ëÀ§Ä¡ = [
+    function ì´ê·¼ì²˜ì—í­íƒ„ì´ëª‡ê°œë‚˜ìˆë‹ˆ(ê²Œì„íŒ,i,j){
+        var í­íƒ„ê°¯ìˆ˜ = 0;
+        var ê²€ì‚¬í• ìƒëŒ€ìœ„ì¹˜ = [
             [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]
         ]
-        °Ë»çÇÒ»ó´ëÀ§Ä¡.forEach( (ÁÂÇ¥) => {
-            var [»ó´ëx,»ó´ëy] = ÁÂÇ¥
+        ê²€ì‚¬í• ìƒëŒ€ìœ„ì¹˜.forEach( (ì¢Œí‘œ) => {
+            var [ìƒëŒ€x,ìƒëŒ€y] = ì¢Œí‘œ
             
-            if( ¿©±â¿¡ÆøÅºÀÌÀÖ´Ï(°ÔÀÓÆÇ, i + »ó´ëy, j + »ó´ëx ) )
-                ÆøÅº°¹¼ö++
+            if( ì—¬ê¸°ì—í­íƒ„ì´ìˆë‹ˆ(ê²Œì„íŒ, i + ìƒëŒ€y, j + ìƒëŒ€x ) )
+                í­íƒ„ê°¯ìˆ˜++
         })
 
-        return ÆøÅº°¹¼ö;
+        return í­íƒ„ê°¯ìˆ˜;
     }
 
     /**
-     * ÆøÅºÀÌ µé¾î°£ °ÔÀÓÆÇ¿¡ ¼ıÀÚ¸¦ Àû±â
-     * @param {Array} arrayedGamePan ÆøÅºÀÌ µé¾î°£ °ÔÀÓÆÇ
+     * í­íƒ„ì´ ë“¤ì–´ê°„ ê²Œì„íŒì— ìˆ«ìë¥¼ ì ê¸°
+     * @param {Array} arrayedGamePan í­íƒ„ì´ ë“¤ì–´ê°„ ê²Œì„íŒ
      */
     function putNumber(arrayedGamePan){
         for( var i = 0; i < arrayedGamePan.length; i++){
             for( var j = 0; j < arrayedGamePan[i].length; j++){
-                if( ¿©±â¿¡ÆøÅºÀÌÀÖ´Ï(arrayedGamePan,i,j) )
+                if( ì—¬ê¸°ì—í­íƒ„ì´ìˆë‹ˆ(arrayedGamePan,i,j) )
                     continue
 
-                var ÆøÅº°¹¼ö = ÀÌ±ÙÃ³¿¡ÆøÅºÀÌ¸î°³³ªÀÖ´Ï(arrayedGamePan,i,j);
-                arrayedGamePan[i][j] = ÆøÅº°¹¼ö;
+                var í­íƒ„ê°¯ìˆ˜ = ì´ê·¼ì²˜ì—í­íƒ„ì´ëª‡ê°œë‚˜ìˆë‹ˆ(arrayedGamePan,i,j);
+                arrayedGamePan[i][j] = í­íƒ„ê°¯ìˆ˜;
             }   
         }
 
         return arrayedGamePan
     }
 
-    function ¿©±â¿¡¼¿ÀÇÁ¤º¸¸¦±â·ÏÇØ( i,j,¼¿ÀÇÁ¤º¸ ){
-        var $Å¸°Ùtr = $(".gamepan table tr").eq(i);
-        var $Å¸°Ùtd = $Å¸°Ùtr.find("td").eq(j);
-        $Å¸°Ùtd.data("bombdata",¼¿ÀÇÁ¤º¸)
+    function ì—¬ê¸°ì—ì…€ì˜ì •ë³´ë¥¼ê¸°ë¡í•´( i,j,ì…€ì˜ì •ë³´ ){
+        var $íƒ€ê²Ÿtr = $(".gamepan table tr").eq(i);
+        var $íƒ€ê²Ÿtd = $íƒ€ê²Ÿtr.find("td").eq(j);
+        $íƒ€ê²Ÿtd.data("bombdata",ì…€ì˜ì •ë³´)
 
     }
 
     /**
-     * ¿Ïº®ÇÑ ¹è¿­ °ÔÀÓÆÇÀ» html °´Ã¼¿¡´Ù ÀüºÎ Àû¾î³õ±â
+     * ì™„ë²½í•œ ë°°ì—´ ê²Œì„íŒì„ html ê°ì²´ì—ë‹¤ ì „ë¶€ ì ì–´ë†“ê¸°
      * @param {Array} putedGamepan 
      */
     function takeHtmlElement(putedGamepan){
         for( var i = 0; i < putedGamepan.length; i++){
             for( var j = 0; j < putedGamepan[i].length; j++){
-                var ¼¿ÀÇÁ¤º¸ = putedGamepan[i][j]
-                ¿©±â¿¡¼¿ÀÇÁ¤º¸¸¦±â·ÏÇØ(i,j, ¼¿ÀÇÁ¤º¸)
+                var ì…€ì˜ì •ë³´ = putedGamepan[i][j]
+                ì—¬ê¸°ì—ì…€ì˜ì •ë³´ë¥¼ê¸°ë¡í•´(i,j, ì…€ì˜ì •ë³´)
             }   
         }
     }
@@ -204,51 +204,51 @@ function setBackgroundRed($this){
 }
 
 function gameOver($this){
-    // Å¬¸¯ ÀÌº¥Æ®¸¦ ÇØÁ¦½ÃÅ²´Ù
+    // í´ë¦­ ì´ë²¤íŠ¸ë¥¼ í•´ì œì‹œí‚¨ë‹¤
     $(".gametable td").off("click")
-    // ÆøÅºÀÏ °æ¿ì ¿ÀÇÂÀ» ÇÑ´Ù
+    // í­íƒ„ì¼ ê²½ìš° ì˜¤í”ˆì„ í•œë‹¤
     $(".gametable td").each(function(){
-        var $Ä­ = $(this)
-        if( isClickedMine($Ä­) ){
-            openCell($Ä­)
-            setBackgroundRed($Ä­)
+        var $ì¹¸ = $(this)
+        if( isClickedMine($ì¹¸) ){
+            openCell($ì¹¸)
+            setBackgroundRed($ì¹¸)
         }
     })
 }
 
 /**
- * ÇØ´ç ÁÂÇ¥¿¡ ÀÖ´Â td Á¦ÀÌÄõ¸® °´Ã¼¸¦ °¡Á®¿È, 
- * ¸¸¾à¿¡ Àß¸øµÈ À§Ä¡¸¦ °¡Á®¿ÔÀ» °æ¿ì null ¹İÈ¯
- * @param {number} xÁÂÇ¥ 
- * @param {number} yÁÂÇ¥ 
+ * í•´ë‹¹ ì¢Œí‘œì— ìˆëŠ” td ì œì´ì¿¼ë¦¬ ê°ì²´ë¥¼ ê°€ì ¸ì˜´, 
+ * ë§Œì•½ì— ì˜ëª»ëœ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì™”ì„ ê²½ìš° null ë°˜í™˜
+ * @param {number} xì¢Œí‘œ 
+ * @param {number} yì¢Œí‘œ 
  */
-function ¼¿°¡Á®¿À±â(xÁÂÇ¥,yÁÂÇ¥){
-    var ¼¼·Î±æÀÌ = $(".gamepan tr").length
-    var °¡·Î±æÀÌ = $(".gamepan tr").eq(0).find("td").length
+function ì…€ê°€ì ¸ì˜¤ê¸°(xì¢Œí‘œ,yì¢Œí‘œ){
+    var ì„¸ë¡œê¸¸ì´ = $(".gamepan tr").length
+    var ê°€ë¡œê¸¸ì´ = $(".gamepan tr").eq(0).find("td").length
 
-    if(xÁÂÇ¥ < 0 || yÁÂÇ¥ < 0) return null;
-    if(xÁÂÇ¥ >= ¼¼·Î±æÀÌ || yÁÂÇ¥ >= °¡·Î±æÀÌ) return null;
+    if(xì¢Œí‘œ < 0 || yì¢Œí‘œ < 0) return null;
+    if(xì¢Œí‘œ >= ì„¸ë¡œê¸¸ì´ || yì¢Œí‘œ >= ê°€ë¡œê¸¸ì´) return null;
 
-    return $(".gamepan tr").eq(xÁÂÇ¥).find("td").eq(yÁÂÇ¥)
+    return $(".gamepan tr").eq(xì¢Œí‘œ).find("td").eq(yì¢Œí‘œ)
 }
 
-function »óÇÏÁÂ¿ì¿ÀÇÂ($this){
+function ìƒí•˜ì¢Œìš°ì˜¤í”ˆ($this){
     var [x,y] = [$this.data("x"),$this.data("y")]
-    var ¿ÀÇÂÇÒ»ó´ëÁÂÇ¥ = [
+    var ì˜¤í”ˆí• ìƒëŒ€ì¢Œí‘œ = [
         [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]
     ]
 
-    ¿ÀÇÂÇÒ»ó´ëÁÂÇ¥.forEach(function(»ó´ëÁÂÇ¥){
-        var [»ó´ëx, »ó´ëy] = »ó´ëÁÂÇ¥
-        var $td = ¼¿°¡Á®¿À±â(y + »ó´ëy,x + »ó´ëx);
+    ì˜¤í”ˆí• ìƒëŒ€ì¢Œí‘œ.forEach(function(ìƒëŒ€ì¢Œí‘œ){
+        var [ìƒëŒ€x, ìƒëŒ€y] = ìƒëŒ€ì¢Œí‘œ
+        var $td = ì…€ê°€ì ¸ì˜¤ê¸°(y + ìƒëŒ€y,x + ìƒëŒ€x);
         if( $td === null) return;
         openCell($td)
     })
 }
 
 function openCell($this){
-    var ÆøÅºHTML = "<i class='fa fa-bomb'></i>"
-    // data¿¡ true, 0,1,2,3,4,~~ µé¾îÀÖÀ½
+    var í­íƒ„HTML = "<i class='fa fa-bomb'></i>"
+    // dataì— true, 0,1,2,3,4,~~ ë“¤ì–´ìˆìŒ
     var data = $this.data("bombdata");
 
     if( $this.hasClass("active") ) return;
@@ -256,11 +256,11 @@ function openCell($this){
     $this.addClass("active")
 
     
-    if( data === true) $this.html(ÆøÅºHTML)
+    if( data === true) $this.html(í­íƒ„HTML)
      else {
         $this.html(data)
     }
-    if( data === 0 ) »óÇÏÁÂ¿ì¿ÀÇÂ($this)
+    if( data === 0 ) ìƒí•˜ì¢Œìš°ì˜¤í”ˆ($this)
 
 
 }
@@ -284,21 +284,21 @@ function initclickEvent(){
     })
 
     /**52
-     * ¾Ï°Åµµ¾øÀ»¶§/  ¿À¸¥Á·Å¬¸¯ÇÏ¸é: ±ê¹ß
-     * ±ê¹ß/ ¿ŞÂÊ:Å¬¸¯X, ¿À¸¥ÂÊÅ¬¸¯½Ã: ¹°À½Ç¥
-     * ¹°À½Ç¥/ ¿ŞÂÊ:Å¬¸¯µÊ, ¿À¸¥ÂÊÅ¬¸¯½Ã: ºó°ø°£
+     * ì•”ê±°ë„ì—†ì„ë•Œ/  ì˜¤ë¥¸ì¡±í´ë¦­í•˜ë©´: ê¹ƒë°œ
+     * ê¹ƒë°œ/ ì™¼ìª½:í´ë¦­X, ì˜¤ë¥¸ìª½í´ë¦­ì‹œ: ë¬¼ìŒí‘œ
+     * ë¬¼ìŒí‘œ/ ì™¼ìª½:í´ë¦­ë¨, ì˜¤ë¥¸ìª½í´ë¦­ì‹œ: ë¹ˆê³µê°„
      */
     $(".gametable td").on("contextmenu",function(event){
         $this = $(this)
-        var ±ê¹ßHTML = "<i class='fab fa-font-awesome-flag'></i>"
-        var ¹°À½Ç¥HTML = "<i class='fas fa-question'></i>"
+        var ê¹ƒë°œHTML = "<i class='fab fa-font-awesome-flag'></i>"
+        var ë¬¼ìŒí‘œHTML = "<i class='fas fa-question'></i>"
         var flag = 0;
         event.preventDefault();
         if( $this.data( "isFlaged") !== true) {
             $this.data( "isFlaged", true )
         }
         else
-            $this.html(¹°À½Ç¥HTML);
+            $this.html(ë¬¼ìŒí‘œHTML);
     })
 }
 
@@ -309,7 +309,7 @@ function debugmode(){
 }
 
 /**
- * °ÔÀÓ ½ÃÀÛ ¹öÆ°À» ´­·¶À»¶§ Å×ÀÌºíÀ» »ı¼ºÇÕ´Ï´Ù
+ * ê²Œì„ ì‹œì‘ ë²„íŠ¼ì„ ëˆŒë €ì„ë•Œ í…Œì´ë¸”ì„ ìƒì„±í•©ë‹ˆë‹¤
  */
 $(".start").on("click",function(){
     var $this = $(this);

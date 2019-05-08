@@ -48,11 +48,11 @@ body, html{
     border-radius:0.5em;
     position: relative;
     bottom:0px;
-    /* ¾Ö´Ï¸ŞÀÌ¼ÇÀ» À§ÇØ ¼±¾ğ */
+    /* ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•´ ì„ ì–¸ */
     transition: all 0.2s;
 }
 
-/* ¹öÆ°¿¡ ¸¶¿ì½º¸¦ °®´Ù´ë¸é ¾Ö´Ï¸ŞÀÌ¼Ç Àû¿ë*/
+/* ë²„íŠ¼ì— ë§ˆìš°ìŠ¤ë¥¼ ê°–ë‹¤ëŒ€ë©´ ì• ë‹ˆë©”ì´ì…˜ ì ìš©*/
 .setting button:hover{
     background:#eee;
     bottom:3px;
