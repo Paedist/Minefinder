@@ -43,8 +43,8 @@ function endTimer(){
 
 /**
  * 테이블생성
- * @param {number} width 가로크기
- * @param {number} height 세로크기
+ * @param {number} width hor크기
+ * @param {number} height ver크기
  * @param {number} bomb 지뢰갯수
  */
 function createTable(width, height, bomb){
@@ -73,7 +73,7 @@ function createTable(width, height, bomb){
  */
 var installMine = (function(){
     /**
-     * 게임판의 크기만큼 빈 배열을 생성하고 반환
+     * gamePan의 크기만큼 빈 배열을 생성하고 반환
      */
     function getGamePanByArray(){
         var vertical = $(".gamepan tr").length;
@@ -89,116 +89,117 @@ var installMine = (function(){
     }
 
 
-    function 폭탄을놓을랜덤좌표(세로,가로){
-        var 랜덤세로좌표 = Math.floor( Math.random() * 세로 )
-        var 랜덤가로좌표 = Math.floor( Math.random() * 가로 )
+    function putRandomBombPoint(ver,hor){
+        var randomVerPoint = Math.floor( Math.random() * ver )
+        var randomHorPoint = Math.floor( Math.random() * hor )
 
         return {
-            x:랜덤가로좌표,
-            y:랜덤세로좌표
+            x:randomHorPoint,
+            y:randomVerPoint
         }
     }
 
-    function 폭탄을여기에놓아도되니(게임판,좌표,제외할좌표){
-        // 제외할 좌표랑 좌표가 똑같으면 부정 반환
-        if( 좌표.x === 제외할좌표.x && 좌표.y === 제외할좌표.y )
+    function isPutBombHere(gamePan,point,exceptionPoint){
+        // 제외할 point랑 point가 똑같으면 부정 반환
+        if( point.x === exceptionPoint.x && point.y === exceptionPoint.y )
             return false
             
-        /// 게임판에 이미 폭탄이 있으면 부정반환
-        if( 게임판[ 좌표.y ][ 좌표.x ] !== null )
+        /// gamePan에 이미 폭탄이 있으면 부정반환
+        if( gamePan[ point.y ][ point.x ] !== null )
             return false
 
         return true
     }
 
-    function 폭탄을놓자(arrayedGamePan,좌표){
-        var { x, y } = 좌표
+    function putBomb(arrayedGamePan,point){
+        var { x, y } = point
         arrayedGamePan[y][x] = true;
     }
 
     /**
-     * 빈 게임판에 폭탄 넣기
+     * 빈 gamePan에 폭탄 넣기
      * @param {Array} arrayedGamePan 빈 배열 
      * @param {Jquery} $clickedCell 제외할 셀의 Jquery 객체
      */
     function putMine(arrayedGamePan,$clickedCell){
         var [ver, hor] = [ arrayedGamePan.length, arrayedGamePan[0].length]
-        var 제외할좌표 = {
+        var exceptionPoint = {
             x: $clickedCell.data("x"),
             y: $clickedCell.data("y") 
         }
-        var 놓아야하는폭탄 = $(".gametable").data("bombcount")
+        var haveToPutBomb = $(".gametable").data("bombcount")
         
-        while(놓아야하는폭탄 !== 0){
-            var 좌표 = 폭탄을놓을랜덤좌표(ver,hor)
-            if( 폭탄을여기에놓아도되니(arrayedGamePan,좌표,제외할좌표) ){
-                폭탄을놓자(arrayedGamePan,좌표)
-                놓아야하는폭탄 -= 1
+        while(haveToPutBomb !== 0){
+            var point = putRandomBombPoint(ver,hor)
+            if( isPutBombHere(arrayedGamePan,point,exceptionPoint) ){
+                putBomb(arrayedGamePan,point)
+                haveToPutBomb -= 1
             }
         }
+        
         
         return arrayedGamePan
     }
 
-    function 여기에폭탄이있니(게임판,i,j){
-        var [세로길이, 가로길이] = [게임판.length, 게임판[0].length]
+    function isBombHere(gamePan,i,j){
+        var [col_len, row_len] = [gamePan.length, gamePan[0].length]
         if(i < 0 || j < 0) return false;
-        if(i >= 세로길이 || j >= 가로길이) return false
+        if(i >= col_len || j >= row_len) return false
         
 
 
-        return 게임판[i][j] === true;
+        return gamePan[i][j] === true;
     }
 
-    function 이근처에폭탄이몇개나있니(게임판,i,j){
-        var 폭탄갯수 = 0;
+    function isNearBombNumber(gamePan,i,j){
+        var bombNum = 0;
         var 검사할상대위치 = [
             [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]
         ]
-        검사할상대위치.forEach( (좌표) => {
-            var [상대x,상대y] = 좌표
+        검사할상대위치.forEach( (point) => {
+            var [relX,relY] = point
             
-            if( 여기에폭탄이있니(게임판, i + 상대y, j + 상대x ) )
-                폭탄갯수++
+            if( isBombHere(gamePan, i + relY, j + relX ) )
+                bombNum++
         })
 
-        return 폭탄갯수;
+        return bombNum;
     }
 
     /**
-     * 폭탄이 들어간 게임판에 숫자를 적기
-     * @param {Array} arrayedGamePan 폭탄이 들어간 게임판
+     * 폭탄이 들어간 gamePan에 숫자를 적기
+     * @param {Array} arrayedGamePan 폭탄이 들어간 gamePan
      */
     function putNumber(arrayedGamePan){
         for( var i = 0; i < arrayedGamePan.length; i++){
             for( var j = 0; j < arrayedGamePan[i].length; j++){
-                if( 여기에폭탄이있니(arrayedGamePan,i,j) )
+                if( isBombHere(arrayedGamePan,i,j) )
                     continue
 
-                var 폭탄갯수 = 이근처에폭탄이몇개나있니(arrayedGamePan,i,j);
-                arrayedGamePan[i][j] = 폭탄갯수;
+                var bombNum = isNearBombNumber(arrayedGamePan,i,j);
+                arrayedGamePan[i][j] = bombNum;
             }   
         }
 
         return arrayedGamePan
     }
 
-    function 여기에셀의정보를기록해( i,j,셀의정보 ){
+    function writeCellinfo( i,j,CellInfo ){
         var $타겟tr = $(".gamepan table tr").eq(i);
         var $타겟td = $타겟tr.find("td").eq(j);
-        $타겟td.data("bombdata",셀의정보)
+        $타겟td.data("bombdata",CellInfo)
 
     }
 
     /**
-     * 완벽한 배열 게임판을 html 객체에다 전부 적어놓기
+     * 완벽한 배열 gamePan을 html 객체에다 전부 적어놓기
      * @param {Array} putedGamepan 
      */
     function takeHtmlElement(putedGamepan){
         for( var i = 0; i < putedGamepan.length; i++){
             for( var j = 0; j < putedGamepan[i].length; j++){
-                var 셀의정보 = putedGamepan[i][j]
-                여기에셀의정보를기록해(i,j, 셀의정보)
+                var CellInfo = putedGamepan[i][j]
+                writeCellinfo(i,j, CellInfo)
             }   
         }
     }
@@ -251,30 +252,30 @@ function gameWin(){
 }
 
 /**
- * 해당 좌표에 있는 td 제이쿼리 객체를 가져옴, 
+ * 해당 point에 있는 td 제이쿼리 객체를 가져옴, 
  * 만약에 잘못된 위치를 가져왔을 경우 null 반환
- * @param {number} x좌표 
- * @param {number} y좌표 
+ * @param {number} x_point 
+ * @param {number} y_point 
  */
-function 셀가져오기(x좌표,y좌표){
-    var 세로길이 = $(".gamepan tr").length
-    var 가로길이 = $(".gamepan tr").eq(0).find("td").length
+function getCell(x_point,y_point){
+    var col_len = $(".gamepan tr").length
+    var row_len = $(".gamepan tr").eq(0).find("td").length
 
-    if(x좌표 < 0 || y좌표 < 0) return null;
-    if(x좌표 >= 세로길이 || y좌표 >= 가로길이) return null;
+    if(x_point < 0 || y_point < 0) return null;
+    if(x_point >= col_len || y_point >= row_len) return null;
 
-    return $(".gamepan tr").eq(x좌표).find("td").eq(y좌표)
+    return $(".gamepan tr").eq(x_point).find("td").eq(y_point)
 }
 
-function 상하좌우오픈($this){
+function zero_all_open($this){
     var [x,y] = [$this.data("x"),$this.data("y")]
-    var 오픈할상대좌표 = [
+    var openRelPoint = [
         [-1,-1], [-1,0], [-1,1], [0,-1], [0,1], [1,-1], [1,0], [1,1]
     ]
 
-    오픈할상대좌표.forEach(function(상대좌표){
-        var [상대x, 상대y] = 상대좌표
-        var $td = 셀가져오기(y + 상대y,x + 상대x);
+    openRelPoint.forEach(function(relPoint){
+        var [relX, relY] = relPoint
+        var $td = getCell(y + relY,x + relX);
         if( $td === null) return;
         openCell($td)
     })
@@ -297,7 +298,7 @@ function openCell($this){
      else {
         $this.html(data)
     }
-    if( data === 0 ) 상하좌우오픈($this)
+    if( data === 0 ) zero_all_open($this)
 
     // 화면의 지뢰 개수를 갱신
     renewalScreenMineCount();
